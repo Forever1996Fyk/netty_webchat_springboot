@@ -1,5 +1,5 @@
 server:
-  port: 8088
+  port: 8089
   tomcat:
     uri-encoding: UTF-8
 mybatis:
@@ -18,9 +18,16 @@ spring:
       pool-name: DatebookHikariCP
       max-lifetime: 28740000
       connection-test-query: SELECT 1
-    url: jdbc:mysql://localhost:3306/netty_webchat?characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/webchat-dev?characterEncoding=utf-8
     username: root
     password: root
-
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    cache: false
 
 

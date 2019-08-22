@@ -28,6 +28,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class UsersController {
     @Autowired
     private UsersService usersService;
@@ -134,12 +135,11 @@ public class UsersController {
                 map.put("password", users.getPassword());
                 userList = usersService.getUserss(map);
                 if (!CollectionUtils.isEmpty(userList)) {
-                    userResult = FormUtil.populate(Users.class, userList.get(0), false);
+                    Users populate = FormUtil.populate(Users.class, userList.get(0), false);
                 }
             }
 
             UsersVO usersVO = new UsersVO();
-            BeanUtils.copyProperties(userResult, usersVO);
 
             return new Result(false, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), usersVO);
 

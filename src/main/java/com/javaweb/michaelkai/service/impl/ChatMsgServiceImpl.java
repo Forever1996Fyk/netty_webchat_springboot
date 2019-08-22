@@ -1,6 +1,7 @@
 package com.javaweb.michaelkai.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.javaweb.michaelkai.common.utils.AppUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +30,7 @@ public class ChatMsgServiceImpl implements  ChatMsgService {
 
     @Override
     public ChatMsg addChatMsg(ChatMsg chatMsg) {
-        //chatMsg.setId(AppUtil.randomId());
-                                                                                                                                        chatMsgMapper.addChatMsg(chatMsg);
+        chatMsg.setId(AppUtil.randomId());
         return chatMsg;
     }
 

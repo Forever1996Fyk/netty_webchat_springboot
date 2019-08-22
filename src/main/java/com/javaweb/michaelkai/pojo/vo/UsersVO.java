@@ -33,14 +33,6 @@ public class UsersVO implements Serializable {
         this.userName = userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getFaceImage() {
         return faceImage;
     }
@@ -73,11 +65,4 @@ public class UsersVO implements Serializable {
         this.qrcode = qrcode;
     }
 
-    public String getCid() {
-        return cid;
-    }
-
-    public void setCid(String cid) {
-        this.cid = cid;
-    }
 }
