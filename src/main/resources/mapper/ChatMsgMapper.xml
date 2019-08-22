@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.michaelkai.dao.ChatMsgMapper">
+    <!-- 新增 -->
+    <insert id="addChatMsg">
+        INSERT INTO chat_msg(
+        <include refid="chatMsg_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        VALUES (
+        <include refid="chatMsg_add_val">
+            <property name="alias" value=""/>
+        </include>
+        )
+    </insert>
+
+    <!-- 批量新增 -->
+    <insert id="addChatMsgs">
+        INSERT INTO chat_msg(
+        <include refid="chatMsg_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            <include refid="chatMsg_add_val">
+                <property name="alias" value="item."/>
+            </include>
+            )
+        </foreach>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="editChatMsgById">
+        UPDATE chat_msg
+        <set>
+            <include refid="chatMsg_set_if">
+                <property name="alias" value=""/>
+            </include>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量修改 -->
+    <update id="editChatMsgByIds">
+        UPDATE chat_msg
+        <set>
+            <include refid="chatMsg_set_if">
+                <property name="alias" value=""/>
+            </include>
+        </set>
+        WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 删除 -->
+    <update id="delChatMsgById">
+            update chat_msg SET status = 0 WHERE id = #{id}
+        </update>
+
+    <!-- 批量删除 -->
+    <update id="delChatMsgByIds">
+        UPDATE chat_msg SET status = 0 WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 真删除 -->
+    <delete id="delChatMsgRealById">
+            DELETE FROM chat_msg WHERE id = #{id}
+        </delete>
+
+    <!-- 真批量删除 -->
+    <delete id="delChatMsgRealByIds">
+        DELETE FROM chat_msg WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 清空 -->
+    <delete id="delChatMsgReals">
+            DELETE FROM chat_msg
+        </delete>
+
+    <!-- 查询用户管理列表 -->
+    <select id="getChatMsgs" parameterType="Map" resultType="Map">
+        SELECT
+        <include refid="chatMsg_select_cond"/>
+        FROM chat_msg a
+        <where>
+            <include refid="chatMsg_where_if"/>
+        </where>
+    </select>
+
+    <!-- 根据id查询用户 -->
+    <select id="getChatMsgById" resultType="Map">
+        SELECT
+        <include refid="chatMsg_select_cond_one"/>
+        FROM chat_msg a
+        WHERE a.id = #{id}
+    </select>
+
+
+    <!-- 查询的选择项, 增删字段时调整 -->
+    <sql id="chatMsg_select_cond">
+            a.id id
+                            
+                                            
+                                    , a.send_user_id sendUserId
+                                            
+                                    , a.accept_user_id acceptUserId
+                                            
+                                    , a.msg msg
+                                            
+                                    , a.sign_flag signFlag
+                                            
+                                    , a.create_time createTime
+                                    </sql>
+
+    <!-- (单个)查询的选择项, 增删字段时调整 -->
+    <sql id="chatMsg_select_cond_one">
+            a.id id
+                                                                            , a.send_user_id sendUserId
+                                                                , a.accept_user_id acceptUserId
+                                                                , a.msg msg
+                                                                , a.sign_flag signFlag
+                                                                , a.create_time createTime
+                                    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="chatMsg_where_if">
+        <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+            AND a.id = #{id}
+        </if>
+        <if test="sendUserId != null and sendUserId != '' and sendUserId != 'null' and sendUserId != 'undefined'">
+            AND a.send_user_id = #{sendUserId}
+        </if>
+        <if test="acceptUserId != null and acceptUserId != '' and acceptUserId != 'null' and acceptUserId != 'undefined'">
+            AND a.accept_user_id = #{acceptUserId}
+        </if>
+        <if test="msg != null and msg != '' and msg != 'null' and msg != 'undefined'">
+            AND a.msg = #{msg}
+        </if>
+        <if test="signFlag != null">
+            AND a.sign_flag = #{signFlag}
+        </if>
+        <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+            AND a.create_time = #{createTime}
+        </if>
+    </sql>
+
+
+    <!-- (批量)新增键, 增删字段时调整 -->
+    <sql id="chatMsg_add_key">
+            id
+                                                        
+                    , send_user_id
+                                            
+                    , accept_user_id
+                                            
+                    , msg
+                                            
+                    , sign_flag
+                                                                </sql>
+
+    <!-- (批量)新增值, 增删字段时调整 -->
+    <sql id="chatMsg_add_val">
+            #{id}
+                                                                            , #{sendUserId}
+                                                                , #{acceptUserId}
+                                                                , #{msg}
+                                                                , #{signFlag}
+                                                                </sql>
+
+    <!-- (批量修改的条件,增减字段时调整) -->
+    <sql id="chatMsg_set_if">
+        <if test="sendUserId != null and sendUserId != '' and sendUserId != 'null' and sendUserId != 'undefined'">
+            send_user_id = #{sendUserId},
+        </if>
+        <if test="acceptUserId != null and acceptUserId != '' and acceptUserId != 'null' and acceptUserId != 'undefined'">
+            accept_user_id = #{acceptUserId},
+        </if>
+        <if test="msg != null and msg != '' and msg != 'null' and msg != 'undefined'">
+            msg = #{msg},
+        </if>
+        <if test="signFlag != null">
+            sign_flag = #{signFlag},
+        </if>
+    </sql>
+</mapper>

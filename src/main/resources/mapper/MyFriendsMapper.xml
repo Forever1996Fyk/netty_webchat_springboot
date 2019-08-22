@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.michaelkai.dao.MyFriendsMapper">
+        <!-- 新增 -->
+        <insert id="addMyFriends">
+            INSERT INTO my_friends(<include refid="myFriends_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="myFriends_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addMyFriendss">
+            INSERT INTO my_friends(<include refid="myFriends_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="myFriends_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editMyFriendsById">
+            UPDATE my_friends
+            <set>
+                <include refid="myFriends_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editMyFriendsByIds">
+            UPDATE my_friends
+            <set>
+                <include refid="myFriends_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delMyFriendsById">
+            update my_friends SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delMyFriendsByIds">
+            UPDATE my_friends SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delMyFriendsRealById">
+            DELETE FROM my_friends WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delMyFriendsRealByIds">
+            DELETE FROM my_friends WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delMyFriendsReals">
+            DELETE FROM my_friends
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="getMyFriendss" parameterType="Map" resultType="Map">
+            SELECT <include refid="myFriends_select_cond" />
+            FROM my_friends a
+            <where>
+                <include refid="myFriends_where_if" />
+            </where>
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="getMyFriendsById" resultType="Map">
+            SELECT <include refid="myFriends_select_cond_one"/>
+            FROM my_friends a
+            WHERE a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="myFriends_select_cond">
+            a.id id
+                            
+                                            
+                                    , a.my_user_id myUserId
+                                            
+                                    , a.my_friend_user_id myFriendUserId
+                                    </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="myFriends_select_cond_one">
+            a.id id
+                                                                            , a.my_user_id myUserId
+                                                                , a.my_friend_user_id myFriendUserId
+                                    </sql>
+
+        <!-- 查询条件 -->
+        <sql id="myFriends_where_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="myUserId != null and myUserId != '' and myUserId != 'null' and myUserId != 'undefined'">
+                    AND a.my_user_id = #{myUserId}
+                </if>
+                                                            <if test="myFriendUserId != null and myFriendUserId != '' and myFriendUserId != 'null' and myFriendUserId != 'undefined'">
+                    AND a.my_friend_user_id = #{myFriendUserId}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="myFriends_add_key">
+            id
+                                                        
+                    , my_user_id
+                                            
+                    , my_friend_user_id
+                                    </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="myFriends_add_val">
+            #{id}
+                                                                            , #{myUserId}
+                                                                , #{myFriendUserId}
+                                    </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="myFriends_set_if">
+                                                                                                                                <if test="myUserId != null and myUserId != '' and myUserId != 'null' and myUserId != 'undefined'">
+                                my_user_id = #{myUserId},
+                            </if>
+                                                                                                                                                                <if test="myFriendUserId != null and myFriendUserId != '' and myFriendUserId != 'null' and myFriendUserId != 'undefined'">
+                                my_friend_user_id = #{myFriendUserId},
+                            </if>
+                                                                                </sql>
+</mapper>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.michaelkai.dao.UsersMapper">
+        <!-- 新增 -->
+        <insert id="addUsers">
+            INSERT INTO users(<include refid="users_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="users_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addUserss">
+            INSERT INTO users(<include refid="users_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="users_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editUsersById">
+            UPDATE users
+            <set>
+                <include refid="users_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editUsersByIds">
+            UPDATE users
+            <set>
+                <include refid="users_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delUsersById">
+            update users SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delUsersByIds">
+            UPDATE users SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delUsersRealById">
+            DELETE FROM users WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delUsersRealByIds">
+            DELETE FROM users WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delUsersReals">
+            DELETE FROM users
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="getUserss" parameterType="Map" resultType="Map">
+            SELECT <include refid="users_select_cond" />
+            FROM users a
+            <where>
+                <include refid="users_where_if" />
+            </where>
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="getUsersById" resultType="Map">
+            SELECT <include refid="users_select_cond_one"/>
+            FROM users a
+            WHERE a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="users_select_cond">
+            a.id id
+                            
+                                            
+                                    , a.user_name userName
+                                            
+                                    , a.password password
+                                            
+                                    , a.face_image faceImage
+                                            
+                                    , a.face_image_big faceImageBig
+                                            
+                                    , a.nick_name nickName
+                                            
+                                    , a.qrcode qrcode
+                                            
+                                    , a.cid cid
+                                    </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="users_select_cond_one">
+            a.id id
+                                                                            , a.user_name userName
+                                                                , a.password password
+                                                                , a.face_image faceImage
+                                                                , a.face_image_big faceImageBig
+                                                                , a.nick_name nickName
+                                                                , a.qrcode qrcode
+                                                                , a.cid cid
+                                    </sql>
+
+        <!-- 查询条件 -->
+        <sql id="users_where_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+                    AND a.user_name = #{userName}
+                </if>
+                                                            <if test="password != null and password != '' and password != 'null' and password != 'undefined'">
+                    AND a.password = #{password}
+                </if>
+                                                            <if test="faceImage != null and faceImage != '' and faceImage != 'null' and faceImage != 'undefined'">
+                    AND a.face_image = #{faceImage}
+                </if>
+                                                            <if test="faceImageBig != null and faceImageBig != '' and faceImageBig != 'null' and faceImageBig != 'undefined'">
+                    AND a.face_image_big = #{faceImageBig}
+                </if>
+                                                            <if test="nickName != null and nickName != '' and nickName != 'null' and nickName != 'undefined'">
+                    AND a.nick_name = #{nickName}
+                </if>
+                                                            <if test="qrcode != null and qrcode != '' and qrcode != 'null' and qrcode != 'undefined'">
+                    AND a.qrcode = #{qrcode}
+                </if>
+                                                            <if test="cid != null and cid != '' and cid != 'null' and cid != 'undefined'">
+                    AND a.cid = #{cid}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="users_add_key">
+            id
+                                                        
+                    , user_name
+                                            
+                    , password
+                                            
+                    , face_image
+                                            
+                    , face_image_big
+                                            
+                    , nick_name
+                                            
+                    , qrcode
+                                            
+                    , cid
+                                    </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="users_add_val">
+            #{id}
+                                                                            , #{userName}
+                                                                , #{password}
+                                                                , #{faceImage}
+                                                                , #{faceImageBig}
+                                                                , #{nickName}
+                                                                , #{qrcode}
+                                                                , #{cid}
+                                    </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="users_set_if">
+                                                                                                                                <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+                                user_name = #{userName},
+                            </if>
+                                                                                                                                                                <if test="password != null and password != '' and password != 'null' and password != 'undefined'">
+                                password = #{password},
+                            </if>
+                                                                                                                                                                <if test="faceImage != null and faceImage != '' and faceImage != 'null' and faceImage != 'undefined'">
+                                face_image = #{faceImage},
+                            </if>
+                                                                                                                                                                <if test="faceImageBig != null and faceImageBig != '' and faceImageBig != 'null' and faceImageBig != 'undefined'">
+                                face_image_big = #{faceImageBig},
+                            </if>
+                                                                                                                                                                <if test="nickName != null and nickName != '' and nickName != 'null' and nickName != 'undefined'">
+                                nick_name = #{nickName},
+                            </if>
+                                                                                                                                                                <if test="qrcode != null and qrcode != '' and qrcode != 'null' and qrcode != 'undefined'">
+                                qrcode = #{qrcode},
+                            </if>
+                                                                                                                                                                <if test="cid != null and cid != '' and cid != 'null' and cid != 'undefined'">
+                                cid = #{cid},
+                            </if>
+                                                                                </sql>
+</mapper>

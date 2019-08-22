@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.michaelkai.dao.FreiendsRequestMapper">
+    <!-- 新增 -->
+    <insert id="addFreiendsRequest">
+        INSERT INTO freiends_request(
+        <include refid="freiendsRequest_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        VALUES (
+        <include refid="freiendsRequest_add_val">
+            <property name="alias" value=""/>
+        </include>
+        )
+    </insert>
+
+    <!-- 批量新增 -->
+    <insert id="addFreiendsRequests">
+        INSERT INTO freiends_request(
+        <include refid="freiendsRequest_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            <include refid="freiendsRequest_add_val">
+                <property name="alias" value="item."/>
+            </include>
+            )
+        </foreach>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="editFreiendsRequestById">
+        UPDATE freiends_request
+        <set>
+            <include refid="freiendsRequest_set_if">
+                <property name="alias" value=""/>
+            </include>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量修改 -->
+    <update id="editFreiendsRequestByIds">
+        UPDATE freiends_request
+        <set>
+            <include refid="freiendsRequest_set_if">
+                <property name="alias" value=""/>
+            </include>
+        </set>
+        WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 删除 -->
+    <update id="delFreiendsRequestById">
+            update freiends_request SET status = 0 WHERE id = #{id}
+        </update>
+
+    <!-- 批量删除 -->
+    <update id="delFreiendsRequestByIds">
+        UPDATE freiends_request SET status = 0 WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 真删除 -->
+    <delete id="delFreiendsRequestRealById">
+            DELETE FROM freiends_request WHERE id = #{id}
+        </delete>
+
+    <!-- 真批量删除 -->
+    <delete id="delFreiendsRequestRealByIds">
+        DELETE FROM freiends_request WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 清空 -->
+    <delete id="delFreiendsRequestReals">
+            DELETE FROM freiends_request
+        </delete>
+
+    <!-- 查询用户管理列表 -->
+    <select id="getFreiendsRequests" parameterType="Map" resultType="Map">
+        SELECT
+        <include refid="freiendsRequest_select_cond"/>
+        FROM freiends_request a
+        <where>
+            <include refid="freiendsRequest_where_if"/>
+        </where>
+    </select>
+
+    <!-- 根据id查询用户 -->
+    <select id="getFreiendsRequestById" resultType="Map">
+        SELECT
+        <include refid="freiendsRequest_select_cond_one"/>
+        FROM freiends_request a
+        WHERE a.id = #{id}
+    </select>
+
+
+    <!-- 查询的选择项, 增删字段时调整 -->
+    <sql id="freiendsRequest_select_cond">
+            a.id id
+                            
+                                            
+                                    , a.send_user_id sendUserId
+                                            
+                                    , a.accept_user_id acceptUserId
+                                            
+                                    , a.request_date_time requestDateTime
+                                    </sql>
+
+    <!-- (单个)查询的选择项, 增删字段时调整 -->
+    <sql id="freiendsRequest_select_cond_one">
+            a.id id
+                                                                            , a.send_user_id sendUserId
+                                                                , a.accept_user_id acceptUserId
+                                                                , a.request_date_time requestDateTime
+                                    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="freiendsRequest_where_if">
+        <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+            AND a.id = #{id}
+        </if>
+        <if test="sendUserId != null and sendUserId != '' and sendUserId != 'null' and sendUserId != 'undefined'">
+            AND a.send_user_id = #{sendUserId}
+        </if>
+        <if test="acceptUserId != null and acceptUserId != '' and acceptUserId != 'null' and acceptUserId != 'undefined'">
+            AND a.accept_user_id = #{acceptUserId}
+        </if>
+        <if test="requestDateTime != null and requestDateTime != '' and requestDateTime != 'null' and requestDateTime != 'undefined'">
+            AND a.request_date_time = #{requestDateTime}
+        </if>
+    </sql>
+
+
+    <!-- (批量)新增键, 增删字段时调整 -->
+    <sql id="freiendsRequest_add_key">
+            id
+                                                        
+                    , send_user_id
+                                            
+                    , accept_user_id
+                                            
+                    , request_date_time
+                                    </sql>
+
+    <!-- (批量)新增值, 增删字段时调整 -->
+    <sql id="freiendsRequest_add_val">
+            #{id}
+                                                                            , #{sendUserId}
+                                                                , #{acceptUserId}
+                                                                , #{requestDateTime}
+                                    </sql>
+
+    <!-- (批量修改的条件,增减字段时调整) -->
+    <sql id="freiendsRequest_set_if">
+        <if test="sendUserId != null and sendUserId != '' and sendUserId != 'null' and sendUserId != 'undefined'">
+            send_user_id = #{sendUserId},
+        </if>
+        <if test="acceptUserId != null and acceptUserId != '' and acceptUserId != 'null' and acceptUserId != 'undefined'">
+            accept_user_id = #{acceptUserId},
+        </if>
+        <if test="requestDateTime != null and requestDateTime != '' and requestDateTime != 'null' and requestDateTime != 'undefined'">
+            request_date_time = #{requestDateTime},
+        </if>
+    </sql>
+</mapper>
