@@ -1,5 +1,5 @@
 window.app = {
-    nettyServerUrl: 'ws://192.168.0.108:8088/ws',
+    nettyServerUrl: 'ws://192.168.1.167:8088/ws',
 
     //和后端的枚举对应
     connect: 1,
@@ -76,6 +76,21 @@ window.Chat = {
             Chat.socket.send(JSON.stringify(dataContent));
         }
     },
+    chat2: function (msg) {
+
+        //如果当前websocket的状态是已经打开，则直接发送，否则重连
+        if(Chat.socket != null
+            && Chat.socket != undefined
+            && Chat.socket.readyState == WebSocket.OPEN) {
+
+            Chat.socket.send(msg);
+        } else {
+            //重连webSocket
+            Chat.init();
+            setTimeout("Chat.reChat('"+ msg +"')")
+            Chat.socket.send(msg);
+        }
+    },
     reChat: function(msg) {
         console.log("消息重新发送。。。");
         Chat.socket.send(msg);
@@ -85,8 +100,9 @@ window.Chat = {
         var userId = $("#userId").val();
         var chatMsg = new app.ChatMsg(userId, null, null, null);
         var dataContent = new app.DataContent(app.connect, chatMsg, null);
+        console.log(JSON.stringify(dataContent));
         //发送websocket
-        Chat.chat(JSON.stringify(dataContent));
+        Chat.chat2(JSON.stringify(dataContent));
     },
     wsClose: function () {
         console.log("连接关闭。。。");
