@@ -240,6 +240,8 @@ window.Chat = {
 
         // 保存聊天快照记录到本地缓存
         app.saveUserChatSnapShot(userId, reciverId, msg, true);
+
+        Chat.initChatSnapShot();
     },
     chat2: function (msg) {
 
@@ -268,9 +270,6 @@ window.Chat = {
         console.log(JSON.stringify(dataContent));
         //发送websocket
         Chat.chat2(JSON.stringify(dataContent));
-
-        //定时发送心跳
-        setInterval("Chat.keepalive()", 10000);
     },
     wsClose: function () {
         console.log("连接关闭。。。");
@@ -315,25 +314,55 @@ window.Chat = {
             app.saveUserChatHistory(myId, friendUserId, msg, app.isFriend);
             // 保存聊天历史记录到本地缓存
             app.saveUserChatSnapShot(myId, friendUserId, msg, false);
+            Chat.initChatSnapShot();
         }
     },
     
     initChatSnapShot: function () {
         var userId = $("#userId").val();
+        $.ajax({
+            url: '/getIndex/' + userId,
+            type: 'GET',
+            async: false,
+            success: function (res) {
+                var data = res.data;
+                var chatSnapShotList = app.getUserChatSnapShot(userId);
+                var chatItemHtml = "";
+                for(var i = 0; i < chatSnapShotList.length; i++) {
+                    var chatItem = chatSnapShotList[i];
+                    var friendId = chatItem.friendId;
+                    var friend;
+
+                    for(var j = 0; j < data.length; j++) {
+                        if (friendId === data[j].id) {
+                            friend = data[j];
+                        }
+                    }
+
+                    chatItemHtml += `<div class="chat-list-people">
+                                        <div><img src="images/img/icon01.png" alt="头像"/></div>
+                                        <input type="hidden" name="friendId" class="friendId" value="`+ friendId +`"/>
+                                        <div class="chat-name">
+                                            <p>` + friend.nickName + "   " + chatItem.msg + `</p>
+                                        </div>
+                                        <div class="message-num">10</div>
+                                    </div>`;
+                }
+
+                $(".chatBox-list").append(chatItemHtml);
+                console.log(data);
+            }
+        });
+        /*var userId = $("#userId").val();
         var chatSnapShotList = app.getUserChatSnapShot(userId);
         var chatItemHtml = "";
         for(var i = 0; i < chatSnapShotList.length; i++) {
             var chatItem = chatSnapShotList[i];
             var friendId = chatItem.friendId;
-        }
-    },
-
-    keepalive: function () {
-        //构建对象
-        var dataContent = new app.DataContent(app.keepalive, null, null);
-        //发送心跳
-        Chat.chat2(JSON.stringify(dataContent));
+        }*/
     }
 };
 
 Chat.init();
+
+Chat.initChatSnapShot();

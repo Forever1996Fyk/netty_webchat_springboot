@@ -31,6 +31,7 @@ public class ChatMsgServiceImpl implements  ChatMsgService {
     @Override
     public ChatMsg addChatMsg(ChatMsg chatMsg) {
         chatMsg.setId(AppUtil.randomId());
+        chatMsgMapper.addChatMsg(chatMsg);
         return chatMsg;
     }
 

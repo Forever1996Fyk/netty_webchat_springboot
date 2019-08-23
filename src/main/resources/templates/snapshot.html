@@ -35,6 +35,7 @@
         </div>
         <div class="chatBox-info">
             <div class="chatBox-list" ref="chatBoxlist">
+                <!--<input type="hidden" id="friend" th:value="${list}"/>
                 <div class="chat-list-people" th:each="myFriend: ${list}">
                     <div><img src="images/img/icon01.png" alt="头像"/></div>
                     <input type="hidden" name="friendId" class="friendId" th:value="${myFriend.id}">
@@ -42,7 +43,7 @@
                         <p th:text="${myFriend.userName} + '这是当前消息。。。'"></p>
                     </div>
                     <div class="message-num">10</div>
-                </div>
+                </div>-->
             </div>
             <div class="chatBox-kuang" ref="chatBoxkuang">
                 <div class="chatBox-content">
@@ -132,7 +133,7 @@
     </div>
 </div>
 <script th:replace="/common/template :: script"></script>
-<script th:src="@{/js/index.js}"></script>
+<script th:src="@{/js/snapshot.js}"></script>
 <script>
 
     screenFuc();

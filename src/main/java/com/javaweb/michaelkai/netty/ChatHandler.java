@@ -27,7 +27,7 @@ import org.springframework.util.StringUtils;
 public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     //用于记录和管理所有客户端的channel
-    private static ChannelGroup users = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static ChannelGroup users = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     /**
      * @return
@@ -108,7 +108,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
         } else if (action == MsgActionEnum.KEEPLIVE.type) {
             //2.4 心跳类型的消息
-
+            System.out.println("收到来自channel为[" + currentChannel + "]的心跳包");
         }
 
 
@@ -136,6 +136,9 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
      **/
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+
+        String channelId = ctx.channel().id().asShortText();
+        System.out.println("客户端被移除， channelId为: " + channelId);
         //当触发handlerRemove, ChannelGroup会自动移除对应客户端的channel
         users.remove(ctx.channel());
         //System.out.println("客户端断开，channel对应的长id：" + ctx.channel().id().asLongText());
